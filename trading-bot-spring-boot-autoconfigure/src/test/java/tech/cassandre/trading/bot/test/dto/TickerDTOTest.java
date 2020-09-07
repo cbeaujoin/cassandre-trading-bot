@@ -15,14 +15,11 @@ import java.text.SimpleDateFormat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
-/**
- * TickerDTO tests.
- */
-@DisplayName("Ticker DTO tests")
+@DisplayName("Ticker DTO")
 public class TickerDTOTest {
 
 	@Test
-	@DisplayName("EqualTo on ticker")
+	@DisplayName("EqualTo")
 	public void equalToForTickers() throws ParseException {
 		// Currency pairs.
 		final CurrencyPairDTO cp1 = new CurrencyPairDTO(CurrencyDTO.ETH, CurrencyDTO.BTC);
@@ -50,6 +47,36 @@ public class TickerDTOTest {
 		TickerDTO t04 = TickerDTO.builder().currencyPair(cp2).timestamp(date1).bid(new BigDecimal("1")).create();
 		assertNotEquals(t01, t04);
 		assertNotEquals(t04, t01);
+	}
+
+	@Test
+	@DisplayName("Builder with String and epoch")
+	public void builderWithStringAndEpoch() throws ParseException {
+		TickerDTO t01 = TickerDTO.builder()
+				.last("0.1")
+				.ask("0.2")
+				.askSize("0.3")
+				.bid("0.4")
+				.bidSize("0.5")
+				.high("0.6")
+				.low("0.7")
+				.open("0.8")
+				.quoteVolume("0.9")
+				.timestampAsEpochInSeconds(1596499200)
+				.create();
+		assertEquals(BigDecimal.valueOf(0.1), t01.getLast());
+		assertEquals(BigDecimal.valueOf(0.2), t01.getAsk());
+		assertEquals(BigDecimal.valueOf(0.3), t01.getAskSize());
+		assertEquals(BigDecimal.valueOf(0.4), t01.getBid());
+		assertEquals(BigDecimal.valueOf(0.5), t01.getBidSize());
+		assertEquals(BigDecimal.valueOf(0.6), t01.getHigh());
+		assertEquals(BigDecimal.valueOf(0.7), t01.getLow());
+		assertEquals(BigDecimal.valueOf(0.8), t01.getOpen());
+		assertEquals(BigDecimal.valueOf(0.9), t01.getQuoteVolume());
+		// Date.
+		assertEquals(2020, t01.getTimestamp().getYear());
+		assertEquals(8, t01.getTimestamp().getMonthValue());
+		assertEquals(4, t01.getTimestamp().getDayOfMonth());
 	}
 
 }

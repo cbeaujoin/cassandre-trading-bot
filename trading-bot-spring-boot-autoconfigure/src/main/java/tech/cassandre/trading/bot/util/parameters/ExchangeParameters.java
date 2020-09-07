@@ -2,9 +2,9 @@ package tech.cassandre.trading.bot.util.parameters;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.validation.annotation.Validated;
+import tech.cassandre.trading.bot.util.validator.Rate;
 
 import javax.validation.Valid;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
@@ -19,48 +19,108 @@ public class ExchangeParameters {
     /** Exchange name parameter. */
     public static final String PARAMETER_NAME = "cassandre.trading.bot.exchange.name";
 
+    /** Username parameter. */
+    public static final String PARAMETER_USERNAME = "cassandre.trading.bot.exchange.username";
+
+    /** Passphrase parameter. */
+    public static final String PARAMETER_PASSPHRASE = "cassandre.trading.bot.exchange.passphrase";
+
+    /** Key parameter. */
+    public static final String PARAMETER_KEY = "cassandre.trading.bot.exchange.key";
+
+    /** Secret parameter. */
+    public static final String PARAMETER_SECRET = "cassandre.trading.bot.exchange.secret";
+
     /** Exchange name. For example : coinbase, kraken, kucoin. */
     @NotEmpty(message = "Exchange name required, for example : coinbase, kraken, kucoin...")
     private String name;
-
-    /** Sandbox parameter. */
-    public static final String PARAMETER_SANDBOX = "cassandre.trading.bot.exchange.sandbox";
-
-    /** Set it to true to use the sandbox. */
-    @NotNull(message = "Sandbox required, set it to true to use the sandbox")
-    private Boolean sandbox;
-
-    /** Username parameter. */
-    public static final String PARAMETER_USERNAME = "cassandre.trading.bot.exchange.username";
 
     /** API username. */
     @NotEmpty(message = "API username required")
     private String username;
 
-    /** Passphrase parameter. */
-    public static final String PARAMETER_PASSPHRASE = "cassandre.trading.bot.exchange.passphrase";
-
     /** API passphrase. */
     @NotEmpty(message = "API passphrase required")
     private String passphrase;
-
-    /** Key parameter. */
-    public static final String PARAMETER_KEY = "cassandre.trading.bot.exchange.key";
 
     /** API key. */
     @NotEmpty(message = "API key required")
     private String key;
 
-    /** Secret parameter. */
-    public static final String PARAMETER_SECRET = "cassandre.trading.bot.exchange.secret";
-
     /** API secret. */
     @NotEmpty(message = "API secret required")
     private String secret;
 
+    /** Modes. */
+    @Valid
+    private Modes modes = new Modes();
+
     /** API Calls rates. */
     @Valid
     private Rates rates = new Rates();
+
+    /** Exchange API rate calls. */
+    public static class Modes {
+
+        /** Sandbox parameter. */
+        public static final String PARAMETER_SANDBOX = "cassandre.trading.bot.exchange.modes.sandbox";
+
+        /** Dry parameter. */
+        public static final String PARAMETER_DRY = "cassandre.trading.bot.exchange.modes.dry";
+
+        /** Set it to true to use the sandbox. */
+        @NotNull(message = "Sandbox parameter required, set it to true to use the sandbox")
+        private Boolean sandbox;
+
+        /** Set it to true to use the dry mode. */
+        @NotNull(message = "Dry parameter required, set it to true to use the dry mode")
+        private Boolean dry;
+
+        /**
+         * Getter for sandbox.
+         *
+         * @return sandbox
+         */
+        public Boolean isSandbox() {
+            return sandbox;
+        }
+
+        /**
+         * Setter for sandbox.
+         *
+         * @param newSandbox the sandbox to set
+         */
+        public void setSandbox(final Boolean newSandbox) {
+            sandbox = newSandbox;
+        }
+
+        /**
+         * Getter dry.
+         *
+         * @return dry
+         */
+        public Boolean isDry() {
+            return dry;
+        }
+
+        /**
+         * Setter dry.
+         *
+         * @param newDry the dry to set
+         */
+        public void setDry(final Boolean newDry) {
+            dry = newDry;
+        }
+
+        @Override
+        public final String toString() {
+            return "Modes{"
+                    + " sandbox=" + sandbox
+                    + ", dry=" + dry
+                    + '}';
+        }
+
+    }
 
     /** Exchange API rate calls. */
     public static class Rates {
@@ -68,79 +128,79 @@ public class ExchangeParameters {
         /** Rate for account parameter. */
         public static final String PARAMETER_RATE_ACCOUNT = "cassandre.trading.bot.exchange.rates.account";
 
-        /** Delay between calls to account API. */
-        @NotNull(message = "Delay between calls to account API is mandatory")
-        @Min(value = 0L, message = "Delay between calls to account API must be positive")
-        private Long account;
-
         /** Rate for ticker parameter. */
         public static final String PARAMETER_RATE_TICKER = "cassandre.trading.bot.exchange.rates.ticker";
 
+        /** Rate for order parameter. */
+        public static final String PARAMETER_RATE_ORDER = "cassandre.trading.bot.exchange.rates.trade";
+
+        /** Delay between calls to account API. */
+        @NotNull(message = "Delay between calls to account API is mandatory")
+        @Rate(message = "Invalid account rate - Enter a long value (ex: 123) or a standard ISO 8601 duration (ex: PT10H)")
+        private String account;
+
         /** Delay between calls to ticker API. */
         @NotNull(message = "Delay between calls to ticker API is mandatory")
-        @Min(value = 0L, message = "Delay between calls to ticker API must be positive")
-        private Long ticker;
+        @Rate(message = "Invalid ticker rate - Enter a long value (ex: 123) or a standard ISO 8601 duration (ex: PT10H)")
+        private String ticker;
 
-        /** Rate for order parameter. */
-        public static final String PARAMETER_RATE_ORDER = "cassandre.trading.bot.exchange.rates.order";
-
-        /** Delay between calls to order API. */
-        @NotNull(message = "Delay between calls to order API is mandatory")
-        @Min(value = 0L, message = "Delay between calls to order API must be positive")
-        private Long order;
+        /** Delay between calls to trade API. */
+        @NotNull(message = "Delay between calls to trade API is mandatory")
+        @Rate(message = "Invalid trade rate - Enter a long value (ex: 123) or a standard ISO 8601 duration (ex: PT10H)")
+        private String trade;
 
         /**
-         * Getter account.
+         * Getter for account.
          *
          * @return account
          */
-        public long getAccount() {
+        public String getAccount() {
             return account;
         }
 
         /**
-         * Setter account.
+         * Setter for account.
          *
          * @param newAccount the account to set
          */
-        public void setAccount(final Long newAccount) {
+        public void setAccount(final String newAccount) {
             account = newAccount;
         }
 
         /**
-         * Getter ticker.
+         * Getter for ticker.
          *
          * @return ticker
          */
-        public Long getTicker() {
+        public String getTicker() {
             return ticker;
         }
 
         /**
-         * Setter ticker.
+         * Setter for ticker.
          *
          * @param newTicker the ticker to set
          */
-        public void setTicker(final Long newTicker) {
+        public void setTicker(final String newTicker) {
             ticker = newTicker;
         }
 
         /**
-         * Getter order.
+         * Getter for order.
          *
          * @return order
          */
-        public Long getOrder() {
-            return order;
+        public String getTrade() {
+            return trade;
         }
 
         /**
-         * Setter order.
+         * Setter for order.
          *
          * @param newOrder the order
          */
-        public void setOrder(final Long newOrder) {
-            order = newOrder;
+        public void setTrade(final String newOrder) {
+            trade = newOrder;
         }
 
         @Override
@@ -148,14 +208,14 @@ public class ExchangeParameters {
             return "Rate{"
                     + " account=" + getAccount()
                     + ", ticker=" + getTicker()
-                    + ", order=" + getOrder()
+                    + ", order=" + getTrade()
                     + '}';
         }
 
     }
 
     /**
-     * Getter name.
+     * Getter for name.
      *
      * @return name
      */
@@ -164,7 +224,7 @@ public class ExchangeParameters {
     }
 
     /**
-     * Setter name.
+     * Setter for name.
      *
      * @param newName the name to set
      */
@@ -173,25 +233,25 @@ public class ExchangeParameters {
     }
 
     /**
-     * Getter sandbox.
+     * Getter modes.
      *
-     * @return sandbox
+     * @return mode
      */
-    public Boolean isSandbox() {
-        return sandbox;
+    public Modes getModes() {
+        return modes;
     }
 
     /**
-     * Setter sandbox.
+     * Setter modes.
      *
-     * @param newSandbox the sandbox to set
+     * @param newModes the modes to set
      */
-    public void setSandbox(final Boolean newSandbox) {
-        sandbox = newSandbox;
+    public void setModes(final Modes newModes) {
+        modes = newModes;
     }
 
     /**
-     * Getter username.
+     * Getter for username.
      *
      * @return username
      */
@@ -200,7 +260,7 @@ public class ExchangeParameters {
     }
 
     /**
-     * Setter username.
+     * Setter for username.
      *
      * @param newUsername the username to set
      */
@@ -209,7 +269,7 @@ public class ExchangeParameters {
     }
 
     /**
-     * Getter passphrase.
+     * Getter for passphrase.
      *
      * @return passphrase
      */
@@ -218,7 +278,7 @@ public class ExchangeParameters {
     }
 
     /**
-     * Setter passphrase.
+     * Setter for passphrase.
      *
      * @param newPassphrase the passphrase to set
      */
@@ -227,7 +287,7 @@ public class ExchangeParameters {
     }
 
     /**
-     * Getter key.
+     * Getter for key.
      *
      * @return key
      */
@@ -236,7 +296,7 @@ public class ExchangeParameters {
     }
 
     /**
-     * Setter key.
+     * Setter for key.
      *
      * @param newKey the key to set
      */
@@ -245,7 +305,7 @@ public class ExchangeParameters {
     }
 
     /**
-     * Getter secret.
+     * Getter for secret.
      *
      * @return secret
      */
@@ -254,7 +314,7 @@ public class ExchangeParameters {
     }
 
     /**
-     * Setter secret.
+     * Setter for secret.
      *
      * @param newSecret the secret to set
      */
@@ -263,7 +323,7 @@ public class ExchangeParameters {
     }
 
     /**
-     * Getter rate.
+     * Getter for rate.
      *
      * @return rate
      */
@@ -272,7 +332,7 @@ public class ExchangeParameters {
     }
 
     /**
-     * Setter rate.
+     * Setter for rate.
      *
      * @param newRates the rate to set
      */
@@ -284,14 +344,13 @@ public class ExchangeParameters {
     public final String toString() {
         return "ExchangeParameters{"
                 + " name='" + getName() + '\''
-                + ", sandbox=" + isSandbox()
                 + ", username='" + getUsername() + '\''
                 + ", passphrase='" + getPassphrase() + '\''
                 + ", key='" + getKey() + '\''
                 + ", secret='" + getSecret() + '\''
-                + ", rate=" + getRates()
+                + ", modes=" + getModes()
+                + ", rates=" + getRates()
                 + '}';
     }
 
 }
-
