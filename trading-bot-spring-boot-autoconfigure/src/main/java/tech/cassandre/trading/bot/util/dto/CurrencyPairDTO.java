@@ -7,7 +7,6 @@ import java.util.Objects;
  * The base currency represents how much of the quote currency to get one unit of the base currency.
  * For example, if you were looking at the CAD/USD currency pair, the Canadian dollar would be the base currency, and the U.S. dollar would be the quote currency.
  */
-@SuppressWarnings("unused")
 public final class CurrencyPairDTO {
 
     /** Currency pair separator. */
@@ -50,7 +49,7 @@ public final class CurrencyPairDTO {
     }
 
     /**
-     * Getter baseCurrency.
+     * Getter for baseCurrency.
      *
      * @return baseCurrency
      */
@@ -59,7 +58,7 @@ public final class CurrencyPairDTO {
     }
 
     /**
-     * Getter quoteCurrency.
+     * Getter for quoteCurrency.
      *
      * @return quoteCurrency
      */

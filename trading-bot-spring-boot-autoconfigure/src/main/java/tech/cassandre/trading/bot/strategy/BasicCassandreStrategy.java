@@ -1,66 +1,69 @@
 package tech.cassandre.trading.bot.strategy;
 
 import tech.cassandre.trading.bot.dto.market.TickerDTO;
+import tech.cassandre.trading.bot.dto.position.PositionDTO;
 import tech.cassandre.trading.bot.dto.trade.OrderDTO;
+import tech.cassandre.trading.bot.dto.trade.TradeDTO;
 import tech.cassandre.trading.bot.dto.user.AccountDTO;
-import tech.cassandre.trading.bot.service.TradeService;
-import tech.cassandre.trading.bot.util.dto.CurrencyPairDTO;
-
-import java.util.Set;
 
 /**
- * Basic strategy - Cassandre bot will run the first CassandreStrategy implementation found.
+ * Basic strategy - Cassandre bot will run the first BasicCassandreStrategy implementation found.
  */
-@SuppressWarnings("unused")
-public abstract class BasicCassandreStrategy {
+public abstract class BasicCassandreStrategy extends GenericCassandreStrategy  {
 
-    /** Trade service. */
-    private TradeService tradeService;
-
-    /**
-     * Getter tradeService.
-     *
-     * @return tradeService
-     */
-    public final TradeService getTradeService() {
-        return tradeService;
+    @Override
+    public final void accountUpdate(final AccountDTO account) {
+        getAccounts().put(account.getId(), account);
+        onAccountUpdate(account);
     }
 
-    /**
-     * Setter tradeService.
-     *
-     * @param newTradeService the tradeService to set
-     */
-    public final void setTradeService(final TradeService newTradeService) {
-        tradeService = newTradeService;
+    @Override
+    public final void tickerUpdate(final TickerDTO ticker) {
+        getLastTicker().put(ticker.getCurrencyPair(), ticker);
+        onTickerUpdate(ticker);
     }
 
-    /**
-     * Implements this method to tell the bot which currency pairs your strategy will receive.
-     *
-     * @return the list of currency pairs tickers your want to receive
-     */
-    public abstract Set<CurrencyPairDTO> getRequestedCurrencyPairs();
+    @Override
+    public final void orderUpdate(final OrderDTO order) {
+        getOrders().put(order.getId(), order);
+        onOrderUpdate(order);
+    }
 
-    /**
-     * Method triggered at every account update.
-     *
-     * @param account account
-     */
-    public abstract void onAccountUpdate(AccountDTO account);
+    @Override
+    public final void tradeUpdate(final TradeDTO trade) {
+        getTrades().put(trade.getId(), trade);
+        onTradeUpdate(trade);
+    }
 
-    /**
-     * Method triggered at every ticker update.
-     *
-     * @param ticker ticker
-     */
-    public abstract void onTickerUpdate(TickerDTO ticker);
+    @Override
+    public final void positionUpdate(final PositionDTO position) {
+        getPositions().put(position.getId(), position);
+        onPositionUpdate(position);
+    }
 
-    /**
-     * Method triggered on every order update.
-     *
-     * @param order order
-     */
-    public abstract void onOrderUpdate(OrderDTO order);
+    @Override
+    public void onAccountUpdate(final AccountDTO account) {
+
+    }
+
+    @Override
+    public void onTickerUpdate(final TickerDTO ticker) {
+
+    }
+
+    @Override
+    public void onOrderUpdate(final OrderDTO order) {
+
+    }
+
+    @Override
+    public void onTradeUpdate(final TradeDTO trade) {
+
+    }
+
+    @Override
+    public void onPositionUpdate(final PositionDTO position) {
+
+    }
 
 }

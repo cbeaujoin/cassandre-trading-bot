@@ -12,7 +12,6 @@ import java.util.Set;
 /**
  * DTO representing an account owned by a {@link UserDTO}.
  */
-@SuppressWarnings("unused")
 public final class AccountDTO {
 
     /** A unique identifier for this account. */
@@ -48,12 +47,12 @@ public final class AccountDTO {
      *
      * @return builder
      */
-    public static AccountDTO.Builder builder() {
-        return new AccountDTO.Builder();
+    public static Builder builder() {
+        return new Builder();
     }
 
     /**
-     * Getter for "id".
+     * Getter for id.
      *
      * @return id
      */
@@ -62,7 +61,7 @@ public final class AccountDTO {
     }
 
     /**
-     * Getter for "name".
+     * Getter for name.
      *
      * @return name
      */
@@ -111,6 +110,61 @@ public final class AccountDTO {
      */
     public Set<BalanceDTO> getBalances() {
         return new LinkedHashSet<>(balances.values());
+    }
+
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        final AccountDTO that = (AccountDTO) o;
+
+        // Testing ID and Name.
+        if (!Objects.equals(getId(), that.getId()) || !Objects.equals(getName(), that.getName())) {
+            return false;
+        }
+
+        // Testing balances size.
+        if (balances.size() != that.balances.size()) {
+            return false;
+        }
+
+        // Testing balances.
+        for (Map.Entry<CurrencyDTO, BalanceDTO> balance : balances.entrySet()) {
+            Optional<BalanceDTO> balanceValue = that.getBalance(balance.getKey());
+            // Checking that the list of currencies exists.
+            if (balanceValue.isEmpty()) {
+                // Did not find the cryptocurrency.
+                return false;
+            } else {
+                // Check each balance.
+                if (!balance.getValue().equals(balanceValue.get())) {
+                    return false;
+                }
+
+            }
+        }
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getName(), getBalances());
+    }
+
+    @Override
+    public String toString() {
+        return "AccountDTO{"
+                + " id='" + id + '\''
+                + ", name='" + name + '\''
+                + ", features=" + features
+                + ", balances=" + balances
+                + '}';
     }
 
     /**
@@ -183,60 +237,6 @@ public final class AccountDTO {
             return new AccountDTO(this);
         }
 
-    }
-
-    @Override
-    public boolean equals(final Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        final AccountDTO that = (AccountDTO) o;
-
-        // Testing ID and Name.
-        if (!Objects.equals(getId(), that.getId()) || !Objects.equals(getName(), that.getName())) {
-            return false;
-        }
-
-        // Testing balances size.
-        if (balances.size() != that.balances.size()) {
-            return false;
-        }
-
-        // Testing balances.
-        for (Map.Entry<CurrencyDTO, BalanceDTO> balance : balances.entrySet()) {
-            Optional<BalanceDTO> balanceValue = that.getBalance(balance.getKey());
-            // Checking that the list of currencies exists.
-            if (balanceValue.isEmpty()) {
-                // Did not find the cryptocurrency.
-                return false;
-            } else {
-                // Check each balance.
-                if (!balance.getValue().equals(balanceValue.get())) {
-                    return false;
-                }
-
-            }
-        }
-
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(getId(), getName(), getBalances());
-    }
-
-    @Override
-    public String toString() {
-        return "AccountDTO{"
-                + " id='" + id + '\''
-                + ", name='" + name + '\''
-                + ", features=" + features
-                + ", balances=" + balances
-                + '}';
     }
 
 }

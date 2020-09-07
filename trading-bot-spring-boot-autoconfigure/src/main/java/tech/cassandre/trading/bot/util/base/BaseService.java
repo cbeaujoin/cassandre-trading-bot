@@ -13,7 +13,6 @@ import java.time.Duration;
 /**
  * Base service.
  */
-@SuppressWarnings("unused")
 public abstract class BaseService extends Base {
 
     /** Mapper. */
@@ -41,7 +40,7 @@ public abstract class BaseService extends Base {
     }
 
     /**
-     * Getter mapper.
+     * Getter for mapper.
      *
      * @return mapper
      */
@@ -50,7 +49,7 @@ public abstract class BaseService extends Base {
     }
 
     /**
-     * Getter bucket.
+     * Getter for bucket.
      *
      * @return bucket
      */

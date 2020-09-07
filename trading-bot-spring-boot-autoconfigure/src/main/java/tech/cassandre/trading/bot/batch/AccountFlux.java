@@ -10,7 +10,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Account flux.
+ * Account flux - push {@link AccountDTO}.
  */
 public class AccountFlux extends BaseFlux<AccountDTO> {
 
@@ -30,7 +30,6 @@ public class AccountFlux extends BaseFlux<AccountDTO> {
     }
 
     @Override
-    @SuppressWarnings("unused")
     protected final Set<AccountDTO> getNewValues() {
         getLogger().debug("AccountFlux - Retrieving new values");
         Set<AccountDTO> newValues = new LinkedHashSet<>();

@@ -12,7 +12,6 @@ import java.util.Objects;
  * DTO representing a stock ticker.
  * A ticker is a report of the price of certain securities, updated continuously throughout the trading session.
  */
-@SuppressWarnings("unused")
 public final class TickerDTO {
 
     /** Currency pair. */
@@ -84,12 +83,12 @@ public final class TickerDTO {
      *
      * @return builder
      */
-    public static TickerDTO.Builder builder() {
-        return new TickerDTO.Builder();
+    public static Builder builder() {
+        return new Builder();
     }
 
     /**
-     * Getter for "currencyPair".
+     * Getter for currencyPair.
      *
      * @return currencyPair
      */
@@ -98,7 +97,7 @@ public final class TickerDTO {
     }
 
     /**
-     * Getter for "open".
+     * Getter for open.
      *
      * @return open
      */
@@ -107,7 +106,7 @@ public final class TickerDTO {
     }
 
     /**
-     * Getter for "last".
+     * Getter for last.
      *
      * @return last
      */
@@ -116,7 +115,7 @@ public final class TickerDTO {
     }
 
     /**
-     * Getter for "bid".
+     * Getter for bid.
      *
      * @return bid
      */
@@ -125,7 +124,7 @@ public final class TickerDTO {
     }
 
     /**
-     * Getter for "ask".
+     * Getter for ask.
      *
      * @return ask
      */
@@ -134,7 +133,7 @@ public final class TickerDTO {
     }
 
     /**
-     * Getter for "high".
+     * Getter for high.
      *
      * @return high
      */
@@ -143,7 +142,7 @@ public final class TickerDTO {
     }
 
     /**
-     * Getter for "low".
+     * Getter for low.
      *
      * @return low
      */
@@ -152,7 +151,7 @@ public final class TickerDTO {
     }
 
     /**
-     * Getter for "vwap".
+     * Getter for vwap.
      *
      * @return vwap
      */
@@ -161,7 +160,7 @@ public final class TickerDTO {
     }
 
     /**
-     * Getter for "volume".
+     * Getter for volume.
      *
      * @return volume
      */
@@ -170,7 +169,7 @@ public final class TickerDTO {
     }
 
     /**
-     * Getter for "quoteVolume".
+     * Getter for quoteVolume.
      *
      * @return quoteVolume
      */
@@ -179,8 +178,7 @@ public final class TickerDTO {
     }
 
     /**
-     * Requested tickers
-     * Getter for "bidSize".
+     * Getter for bidSize.
      *
      * @return bidSize
      */
@@ -189,7 +187,7 @@ public final class TickerDTO {
     }
 
     /**
-     * Getter for "askSize".
+     * Getter for askSize.
      *
      * @return askSize
      */
@@ -198,7 +196,7 @@ public final class TickerDTO {
     }
 
     /**
-     * Getter for "timestamp".
+     * Getter for timestamp.
      *
      * @return timestamp
      */
@@ -206,10 +204,50 @@ public final class TickerDTO {
         return timestamp;
     }
 
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        final TickerDTO tickerDTO = (TickerDTO) o;
+        return Objects.equals(getCurrencyPair(), tickerDTO.getCurrencyPair())
+                && getTimestamp().equals(tickerDTO.getTimestamp());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getCurrencyPair(), getTimestamp());
+    }
+
+    @Override
+    public String toString() {
+        return "TickerDTO{"
+                + " currencyPair=" + currencyPair
+                + ", open=" + open
+                + ", last=" + last
+                + ", bid=" + bid
+                + ", ask=" + ask
+                + ", high=" + high
+                + ", low=" + low
+                + ", vwap=" + vwap
+                + ", volume=" + volume
+                + ", quoteVolume=" + quoteVolume
+                + ", bidSize=" + bidSize
+                + ", askSize=" + askSize
+                + ", timestamp=" + timestamp
+                + '}';
+    }
+
     /**
      * Builder.
      */
     public static final class Builder {
+
+        /** To milliseconds. */
+        public static final int MILLISECONDS = 1000;
 
         /** Currency pair. */
         private CurrencyPairDTO currencyPair;
@@ -273,6 +311,17 @@ public final class TickerDTO {
         }
 
         /**
+         * open (with string).
+         *
+         * @param newOpen open
+         * @return builder
+         */
+        public Builder open(final String newOpen) {
+            this.open = toBigDecimal(newOpen);
+            return this;
+        }
+
+        /**
          * last.
          *
          * @param newLast newLast
@@ -280,6 +329,17 @@ public final class TickerDTO {
          */
         public Builder last(final BigDecimal newLast) {
             this.last = newLast;
+            return this;
+        }
+
+        /**
+         * last (with string).
+         *
+         * @param newLast newLast
+         * @return builder
+         */
+        public Builder last(final String newLast) {
+            this.last = toBigDecimal(newLast);
             return this;
         }
 
@@ -295,6 +355,17 @@ public final class TickerDTO {
         }
 
         /**
+         * bid (with string).
+         *
+         * @param newBid newBid
+         * @return builder
+         */
+        public Builder bid(final String newBid) {
+            this.bid = toBigDecimal(newBid);
+            return this;
+        }
+
+        /**
          * ask.
          *
          * @param newAsk newAsk
@@ -302,6 +373,17 @@ public final class TickerDTO {
          */
         public Builder ask(final BigDecimal newAsk) {
             this.ask = newAsk;
+            return this;
+        }
+
+        /**
+         * ask (with string).
+         *
+         * @param newAsk newAsk
+         * @return builder
+         */
+        public Builder ask(final String newAsk) {
+            this.ask = toBigDecimal(newAsk);
             return this;
         }
 
@@ -317,6 +399,17 @@ public final class TickerDTO {
         }
 
         /**
+         * high (with string).
+         *
+         * @param newHigh newHigh
+         * @return builder
+         */
+        public Builder high(final String newHigh) {
+            this.high = toBigDecimal(newHigh);
+            return this;
+        }
+
+        /**
          * low.
          *
          * @param newLow newLow
@@ -328,13 +421,35 @@ public final class TickerDTO {
         }
 
         /**
-         * vwap.
+         * low (with string).
          *
-         * @param newWwap newWwap
+         * @param newLow newLow
          * @return builder
          */
-        public Builder vwap(final BigDecimal newWwap) {
-            this.vwap = newWwap;
+        public Builder low(final String newLow) {
+            this.low = toBigDecimal(newLow);
+            return this;
+        }
+
+        /**
+         * vwap.
+         *
+         * @param newVwap newWwap
+         * @return builder
+         */
+        public Builder vwap(final BigDecimal newVwap) {
+            this.vwap = newVwap;
+            return this;
+        }
+
+        /**
+         * vwap (with string).
+         *
+         * @param newVwap newVwap
+         * @return builder
+         */
+        public Builder vwap(final String newVwap) {
+            this.vwap = toBigDecimal(newVwap);
             return this;
         }
 
@@ -350,6 +465,17 @@ public final class TickerDTO {
         }
 
         /**
+         * volume (with string).
+         *
+         * @param newVolume newVolume
+         * @return builder
+         */
+        public Builder volume(final String newVolume) {
+            this.volume = toBigDecimal(newVolume);
+            return this;
+        }
+
+        /**
          * quoteVolume.
          *
          * @param newQuoteVolume quoteVolume
@@ -361,6 +487,17 @@ public final class TickerDTO {
         }
 
         /**
+         * quoteVolume (with string).
+         *
+         * @param newQuoteVolume quoteVolume
+         * @return builder
+         */
+        public Builder quoteVolume(final String newQuoteVolume) {
+            this.quoteVolume = toBigDecimal(newQuoteVolume);
+            return this;
+        }
+
+        /**
          * bidSize.
          *
          * @param newBidSize bidSize
@@ -368,6 +505,18 @@ public final class TickerDTO {
          */
         public Builder bidSize(final BigDecimal newBidSize) {
             this.bidSize = newBidSize;
+            return this;
+        }
+
+
+        /**
+         * bidSize (with string).
+         *
+         * @param newBidSize bidSize
+         * @return builder
+         */
+        public Builder bidSize(final String newBidSize) {
+            this.bidSize = toBigDecimal(newBidSize);
             return this;
         }
 
@@ -383,13 +532,35 @@ public final class TickerDTO {
         }
 
         /**
-         * timestamp.
+         * askSize (with string).
+         *
+         * @param newAskSize askSize
+         * @return builder
+         */
+        public Builder askSize(final String newAskSize) {
+            this.askSize = toBigDecimal(newAskSize);
+            return this;
+        }
+
+        /**
+         * timestamp (with Date).
          *
          * @param newTimestamp timestamp
          * @return builder
          */
         public Builder timestamp(final Date newTimestamp) {
             this.timestamp = newTimestamp;
+            return this;
+        }
+
+        /**
+         * timestamp (with epoch in seconds).
+         *
+         * @param newTimestamp timestamp
+         * @return builder
+         */
+        public Builder timestampAsEpochInSeconds(final long newTimestamp) {
+            this.timestamp = new Date(newTimestamp * MILLISECONDS);
             return this;
         }
 
@@ -402,43 +573,16 @@ public final class TickerDTO {
             return new TickerDTO(this);
         }
 
-    }
-
-    @Override
-    public boolean equals(final Object o) {
-        if (this == o) {
-            return true;
+        /**
+         * Transforms a String in a BigDecimal.
+         *
+         * @param stringValue float value
+         * @return big decimal value
+         */
+        private BigDecimal toBigDecimal(final String stringValue) {
+            return new BigDecimal(stringValue);
         }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        final TickerDTO tickerDTO = (TickerDTO) o;
-        return Objects.equals(getCurrencyPair(), tickerDTO.getCurrencyPair())
-                && getTimestamp().equals(tickerDTO.getTimestamp());
-    }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(getCurrencyPair(), getTimestamp());
-    }
-
-    @Override
-    public String toString() {
-        return "TickerDTO{"
-                + " currencyPair=" + currencyPair
-                + ", open=" + open
-                + ", last=" + last
-                + ", bid=" + bid
-                + ", ask=" + ask
-                + ", high=" + high
-                + ", low=" + low
-                + ", vwap=" + vwap
-                + ", volume=" + volume
-                + ", quoteVolume=" + quoteVolume
-                + ", bidSize=" + bidSize
-                + ", askSize=" + askSize
-                + ", timestamp=" + timestamp
-                + '}';
     }
 
 }
